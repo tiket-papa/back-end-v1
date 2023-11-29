@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+    BasicUser @map("basic user")
+    AdminWisata @map("admin wisata")
+    AdminKeuangan @map("admin keuangan")
+    SuperAdmin @map("super admin")
+
+    @@map("roles")
+}
+
+model excampleCrude {
+  id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
+  excmapeName String @map("excmape_name")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deleted   Int @db.TinyInt() @default(0) @map("deleted")
+
+  @@map("excample_crude")
+}
+
+model UsersAccount {
+  id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
+  username  String?
+  email     String  @unique
+  password  String
+  role      Role @default(BasicUser)
+  VerifiedEmail Int @db.TinyInt() @default(0) @map("verified_email")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deleted   Int @db.TinyInt() @default(0) @map("deleted")
+  userData  UserData?
+
+  @@map("users_account")
+}
+
+
+model UserData {
+  id      Int @id @default(autoincrement()) @map("id")
+  profile String? @map("profile")
+  userAccountId String @unique @map("user_account_id")
+  userAcount  UsersAccount @relation(fields: [userAccountId], references: [id])
+
+  @@map("user_data")
+}
