@@ -19,6 +19,11 @@ enum Role {
     @@map("roles")
 }
 
+enum Gender {
+    Male @map("male")
+    Female @map("female")
+}
+
 model excampleCrude {
   id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
   excmapeName String @map("excmape_name")
@@ -40,16 +45,24 @@ model UsersAccount {
   updatedAt DateTime? @updatedAt @map("updated_at")
   deleted   Int @db.TinyInt() @default(0) @map("deleted")
   userData  UserData?
+  userAccess  UserAccess?
 
   @@map("users_account")
 }
-
 
 model UserData {
   id      Int @id @default(autoincrement()) @map("id")
   profile String? @map("profile")
   userAccountId String @unique @map("user_account_id")
-  userAcount  UsersAccount @relation(fields: [userAccountId], references: [id])
+  userAcount  UsersAccount @relation(fields: [userAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("user_data")
+}
+
+model UserAccess {
+  id      Int @id @default(autoincrement()) @map("id")
+  accessToken  String @map("access_token")
+  rememberMe  Int @db.TinyInt() @default(0) @map("remember_me")
+  userAccountId String @unique @map("user_account_id")
+  userAcount  UsersAccount @relation(fields: [userAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
 }

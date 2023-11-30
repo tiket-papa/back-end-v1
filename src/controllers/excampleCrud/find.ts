@@ -43,8 +43,6 @@ export const findCurdExcample = async function (req: any, res: Response): Promis
           ]
         })
       },
-      skip: page.offset,
-      take: page.limit,
       orderBy: {
         id: 'desc'
       }
