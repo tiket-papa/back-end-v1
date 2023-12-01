@@ -1,16 +1,15 @@
-import { type excampleCrude } from '@prisma/client'
+import { type UsersAccount } from '@prisma/client'
 import { type Response } from 'express'
 import { CONSOL, RequestCheker, ResponseData } from '../../utilities'
 import { StatusCodes } from 'http-status-codes'
 import prisma from '../../db'
 
-export const updateExcampleCrud = async function (req: any, res: Response): Promise<any> {
-  const requestBody = req.body as excampleCrude
+export const removeUser = async function (req: any, res: Response): Promise<any> {
+  const requestBody = req.params as UsersAccount
   const emptyfield = RequestCheker({
     requireList: ['id'],
     requestData: requestBody
   })
-
   if (emptyfield.length > 0) {
     const message = `unable to process request! error( ${emptyfield})`
     const response = ResponseData.error(message)
@@ -18,7 +17,7 @@ export const updateExcampleCrud = async function (req: any, res: Response): Prom
   }
 
   try {
-    const result = await prisma.excampleCrude.findUnique({
+    const result = await prisma.usersAccount.findUnique({
       where: {
         deleted: 0,
         id: requestBody.id
@@ -31,15 +30,12 @@ export const updateExcampleCrud = async function (req: any, res: Response): Prom
       return res.status(StatusCodes.NOT_FOUND).json(response)
     }
 
-    requestBody.updatedAt = new Date()
-    await prisma.excampleCrude.update({
+    await prisma.usersAccount.update({
       where: {
         id: requestBody.id
       },
       data: {
-        ...(requestBody.excmapeName.length > 0 && {
-          excmapeName: requestBody.excmapeName
-        })
+        deleted: 1
       }
     })
 
