@@ -88,6 +88,7 @@ export const updateUserData = async function (req: any, res: Response): Promise<
       return res.status(StatusCodes.NOT_FOUND).json(response)
     }
 
+    (Boolean(req.file)) && (requestBody.profile = req.file.path)
     await prisma.userData.update({
       where: {
         userAccountId: requestBody.userAccountId

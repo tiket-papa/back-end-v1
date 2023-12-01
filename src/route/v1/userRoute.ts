@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import express, { type Express, type Request, type Response } from 'express'
 import { userController } from '../../controllers'
+import { cekFileSize, fileUpaloadHendeler } from '../../middlewares'
 
 export const userRouter = (app: Express) => {
   const router = express.Router()
@@ -27,13 +28,25 @@ export const userRouter = (app: Express) => {
     async (req: Request, res: Response) => await userController.create(req, res)
   )
 
-  router.put(
+  router.patch(
     '/',
     async (req: Request, res: Response) => await userController.updateAccount(req, res)
   )
 
-  router.put(
+  router.patch(
     '/data',
+    fileUpaloadHendeler('public/profile').single('profile'),
+    cekFileSize,
     async (req: Request, res: Response) => await userController.updateData(req, res)
+  )
+
+  router.delete(
+    '/',
+    async (req: Request, res: Response) => await userController.remove(req, res)
+  )
+
+  router.delete(
+    '/hard/',
+    async (req: Request, res: Response) => await userController.hardRemove(req, res)
   )
 }
