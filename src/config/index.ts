@@ -1,4 +1,5 @@
 import dotenv from 'dotenv'
+import ip from 'ip'
 
 dotenv.config()
 
@@ -7,8 +8,9 @@ export const CONFIG = {
   appVersion: process.env.APP_VERSION,
   appMode: process.env.APP_MODE || 'dev',
   appLog: (Boolean(process.env.APP_LOG)) || false,
-  port: process.env.APP_PORT,
-  host: process.env.APP_HOST || 'localhost',
+  appURL : process.env.APP_URL || `http://${ip.address()}`,
+  port: process.env.APP_PORT || 5001,
+  host: process.env.APP_HOST || ip.address(),
   secret: {
     keyEncryption: process.env.SECRET_KEY_ENCRYIPTION,
     passwordEncryption: process.env.SECRET_PASSWORD_ENCRYPTION,
@@ -47,6 +49,7 @@ export const CONFIG = {
     }
   },
   smtp: {
+    sender : process.env.SMTP_SENDER || 'no-reply',
     host: process.env.VERIFICATION_HOST,
     port: process.env.VERIFICATION_PORT,
     email: process.env.VERIFICATION_EMIAL,

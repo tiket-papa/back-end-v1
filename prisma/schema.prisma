@@ -36,7 +36,6 @@ model excampleCrude {
 
 model UsersAccount {
   id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
-  username  String?
   email     String  @unique
   password  String
   role      Role @default(BasicUser)
@@ -52,6 +51,7 @@ model UsersAccount {
 
 model UserData {
   id      Int @id @default(autoincrement()) @map("id")
+  username  String? @map("user_name")
   profile String? @map("profile")
   userAccountId String @unique @map("user_account_id")
   userAcount  UsersAccount @relation(fields: [userAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade)

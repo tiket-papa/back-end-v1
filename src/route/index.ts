@@ -4,6 +4,7 @@ import { excampleCrudeRouter } from './v1/excampleCrudRoute'
 import { StatusCodes } from 'http-status-codes'
 import { ResponseData } from '../utilities'
 import { userRouter } from './v1/userRoute'
+import { authRouter } from './v1/authRoute'
 export const appRouterv1 = async (app: Express): Promise<any> => {
   app.get(
     '/',
@@ -30,4 +31,5 @@ export const appRouterv1 = async (app: Express): Promise<any> => {
   )
   excampleCrudeRouter(app)
   userRouter(app)
+  authRouter(app)
 }

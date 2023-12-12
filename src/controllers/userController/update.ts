@@ -39,9 +39,9 @@ export const updateUserAcunt = async function (req: any, res: Response): Promise
         id: requestBody.id
       },
       data: {
-        ...(requestBody.username !== null && {
-          username: requestBody.username
-        }),
+        // ...(requestBody. !== null && {
+        //   username: requestBody.username
+        // }),
         ...(requestBody.password.length > 0 && {
           password: await passwordHasher(requestBody.password)
         })

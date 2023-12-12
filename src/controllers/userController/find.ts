@@ -17,7 +17,7 @@ export const findAllUser = async function (req: any, res: Response): Promise<any
         ...(Boolean(req.query.search) && {
           OR: [
             {
-              username: {
+              email: {
                 contains: req.query.search
               }
             }
@@ -40,7 +40,7 @@ export const findAllUser = async function (req: any, res: Response): Promise<any
         ...(Boolean(req.query.search) && {
           OR: [
             {
-              username: {
+              email: {
                 contains: req.query.search
               }
             }
