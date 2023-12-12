@@ -26,4 +26,14 @@ export const authRouter = (app: Express) => {
     '/register',
     async (req: Request, res: Response) => await authController.register(req, res)
   )
+
+  router.get(
+    '/verify',
+    async (req: Request, res: Response) => await authController.mailVerification(req, res)
+  )
+
+  router.get(
+    '/requestEmailverification',
+    async (req: Request, res: Response) => await authController.requestEmailverification(req, res)
+  )
 }

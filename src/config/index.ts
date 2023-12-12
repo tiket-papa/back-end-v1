@@ -9,6 +9,7 @@ export const CONFIG = {
   appMode: process.env.APP_MODE || 'dev',
   appLog: (Boolean(process.env.APP_LOG)) || false,
   appURL : process.env.APP_URL || `http://${ip.address()}`,
+  TargetURL : process.env.TARGET_URL || `http://${ip.address()}`,
   port: process.env.APP_PORT || 5001,
   host: process.env.APP_HOST || ip.address(),
   secret: {

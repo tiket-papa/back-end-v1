@@ -52,7 +52,7 @@ export const registerCObtroller = async function (req: any, res: Response): Prom
     })
     const token = generateAccesTokenjustid(requestBody.id, CONFIG.secret.secretEmailVerivcation as string, '1d')
 
-    const link = `${CONFIG.appURL}:${CONFIG.port}/api/v1/auth/verify?q=${token}`
+    const link = `${CONFIG.TargetURL}:${CONFIG.port}/api/v1/auth/verify?q=${token}`
 
     const emailVerivication = verifyEmailTemplate(link)
 
@@ -66,7 +66,7 @@ export const registerCObtroller = async function (req: any, res: Response): Prom
     })
 
     const response = ResponseData.default
-    response.data = { message: 'success' }
+    response.data = { message: 'account has been successfully created, please cek your email', link }
     return res.status(StatusCodes.OK).json(response)
   } catch (error: any) {
     CONSOL.error(error)
