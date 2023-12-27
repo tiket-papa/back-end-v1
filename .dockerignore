@@ -1,0 +1,13 @@
+node_module
+*.log
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+.git
+.gitignore
+
+.eslintrc.json
+.eslintignore
+
+.vercelignore

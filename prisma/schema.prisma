@@ -1,8 +1,14 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// generator client {
+//   provider = "prisma-client-js"
+//   binaryTargets = ["native", "rhel-openssl-1.0.x"]
+// }
+
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -19,9 +25,13 @@ enum Role {
     @@map("roles")
 }
 
-enum Gender {
-    Male @map("male")
-    Female @map("female")
+enum Status {
+    Created @map("created")
+    Pending @map("pending")
+    Settlement @map("settlement")
+    Expired @map("expired")
+    Done @map("done")
+    Canceled @map("canceled")
 }
 
 model excampleCrude {
@@ -45,6 +55,9 @@ model UsersAccount {
   deleted   Int @db.TinyInt() @default(0) @map("deleted")
   userData  UserData?
   userAccess  UserAccess?
+  Wisata  Wisata?
+  Transaction  Transaction[]
+  Ulasan  Ulasan[]
 
   @@map("users_account")
 }
@@ -65,4 +78,140 @@ model UserAccess {
   rememberMe  Int @db.TinyInt() @default(0) @map("remember_me")
   userAccountId String @unique @map("user_account_id")
   userAcount  UsersAccount @relation(fields: [userAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+}
+
+model Wisata {
+  id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
+  name      String?
+  Location  String?
+  address   String?
+  range     Int?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deleted   Int @db.TinyInt() @default(0) @map("deleted")
+
+  userAccountId String @unique @map("user_account_id")
+  UsersAccount  UsersAccount @relation(fields: [userAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  Images Images[]
+  Fasilitias ListFasilitas[]
+  PublicFasilitias ListPublickFasilitas[]
+  TiketWisata TiketWisata []
+
+  transaction Transaction[]
+
+  Ulasan Ulasan[]
+}
+
+model Images {
+  id        Int  @id @default(autoincrement()) @map("id")
+  image     String
+  wisataId  String @map("wisata_id")
+  Wisata    Wisata @relation(fields: [wisataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+model ListFasilitas{
+  id        Int  @id @default(autoincrement()) @map("id")
+  name      String
+  logo      String?
+  wisataId  String @map("wisata_id")
+  Wisata    Wisata @relation(fields: [wisataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("list_fasilitas")
+}
+
+model ListPublickFasilitas {
+  id        Int  @id @default(autoincrement()) @map("id")
+  name      String
+  logo      String?
+  range     Int
+  wisataId  String @map("wisata_id")
+  Wisata    Wisata @relation(fields: [wisataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("list_publick_fasilitas")
+}
+
+model TiketWisata{
+  id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
+  name      String?
+  image     String?
+  price     Int?
+  wisataId  String @map("wisata_id")
+  Wisata    Wisata @relation(fields: [wisataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  deleted   Int @db.TinyInt() @default(0) @map("deleted")
+
+  kapasitas Kapasitas?
+  Fasilitas TiketFasilitas[]
+  DetailTiketWisata DetailTransaction[]
+  
+  @@map("tiket_wisata")
+}
+
+model Kapasitas {
+  id        Int  @id @default(autoincrement()) @map("id")
+  jumlah    Int?
+  satuan    String?
+
+  idTiketWisata  String @map("id_tiket_wisata") @unique
+  tiketWisata  TiketWisata @relation(fields: [idTiketWisata], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model TiketFasilitas{
+  id        Int  @id @default(autoincrement()) @map("id")
+  name      String?
+  unit      String?
+  idTiketWisata  String @map("id_tiket_wisata")
+  tiketWisata  TiketWisata @relation(fields: [idTiketWisata], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("tiket_fasilitas")
+}
+
+model Transaction {
+  id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
+  time      DateTime
+  totalPrice Int?
+  status    Status @default(Created)
+  wisataId  String @map("wisata_id")
+  userId    String @map("user_id")
+  Wisata    Wisata @relation(fields: [wisataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Users     UsersAccount  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  DetailTransaction DetailTransaction[]
+
+  ulasan Ulasan?
+}
+
+
+model DetailTransaction {
+  id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
+  quantity  Int?
+  price     Int?
+  idTiketWisata  String @map("id_tiket_wisata")
+  tiketWisata  TiketWisata @relation(fields: [idTiketWisata], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  transactionId  String @map("transaction_id")
+  transaction  Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("detail_transaction")
+}
+
+model Ulasan{
+  id        String  @id @default(dbgenerated("uuid()")) @db.VarChar(36) @map("id")
+  rating    Int?
+  comment   String?
+  date      DateTime?
+  TransactionId  String @map("transaction_id") @unique
+  WisataId  String @map("wisata_id") 
+  UserId  String @map("user_id")
+  ImagesUlasan ImagesUlasan[]
+
+  deleted   Int @db.TinyInt() @default(0) @map("deleted")
+
+  Transaction  Transaction @relation(fields: [TransactionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Users     UsersAccount  @relation(fields: [UserId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Wisata    Wisata @relation(fields: [WisataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ImagesUlasan{
+  id        Int  @id @default(autoincrement()) @map("id")
+  image     String?
+  ulasanId  String @map("ulasan_id")
+  Ulasan    Ulasan @relation(fields: [ulasanId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

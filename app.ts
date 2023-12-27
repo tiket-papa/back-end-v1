@@ -32,5 +32,5 @@ app.use('/public', express.static('public'))
 
 app.routes = appRouterv1(app)
 app.listen(port, () => {
-  console.log(`server is running on http://${CONFIG.host}:${port}/api/v1`)
+  console.log(`server is running on http://${CONFIG.host}:${port}/api/v`)
 })
