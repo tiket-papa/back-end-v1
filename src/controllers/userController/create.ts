@@ -10,7 +10,7 @@ export const createUser = async function (req: any, res: Response): Promise<any>
   const requestBody = req.body as UsersAccount
 
   const emptyfield = RequestCheker({
-    requireList: ['username', 'password'],
+    requireList: ['email', 'password'],
     requestData: requestBody
   })
 

@@ -25,6 +25,15 @@ enum Role {
     @@map("roles")
 }
 
+enum typeWisata  {
+  pantai 
+  hutan 
+  gunung
+  taman
+  kuliner
+  lain @map("lain Lain")
+}
+
 enum Status {
     Created @map("created")
     Pending @map("pending")
@@ -86,6 +95,7 @@ model Wisata {
   Location  String?
   address   String?
   range     Int?
+  typeWisata typeWisata @map("type_wisata")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deleted   Int @db.TinyInt() @default(0) @map("deleted")

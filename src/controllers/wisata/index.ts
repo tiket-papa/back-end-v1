@@ -1,6 +1,7 @@
-import { findAllWisata, findOneByWisataId } from './find'
+import { findAllWisata, findOneByWisataId, findWisAllataByType } from './find'
 
 export const wisataController = {
   find: findAllWisata,
-  findOne: findOneByWisataId
+  findOne: findOneByWisataId,
+  findBytyp: findWisAllataByType
 }
